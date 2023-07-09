@@ -1,6 +1,8 @@
+type Comparator = "eq" | "lt" | "gt";
 type MatchingParameter = {
     key: string;
     value: string;
+    comparator?: Comparator;
 }
 export type ConfigNode = {
     matches: MatchingParameter[] | "all";
@@ -8,8 +10,20 @@ export type ConfigNode = {
     groups?: ConfigNode[];
 }
 
+const satisfiesCondition = (p1: MatchingParameter, p2: MatchingParameter, comp: Comparator) => {
+    if (comp === "eq") {
+        return p1.value === p2.value;
+    } else if (comp === "lt") {
+        return p2.value < p1.value;
+    } else if (comp === "gt") {
+        return p2.value > p1.value;
+    } else {
+        return false;
+    }
+}
+
 const atLeastOneParamMatches = (matches: MatchingParameter[] | "all", parameters: MatchingParameter[]): boolean => {
-    return matches === "all" || !!matches.find(p1 => parameters.find(p2 => (p1.key === p2.key && p1.value === p2.value)));
+    return matches === "all" || !!matches.find(p1 => parameters.find(p2 => (p1.key === p2.key && satisfiesCondition(p1, p2, p1.comparator || "eq"))));
 }
 
 const lookUpConfigValueRecursive = (config: ConfigNode, parameters: MatchingParameter[], depth: number): any => {

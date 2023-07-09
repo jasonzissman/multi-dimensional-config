@@ -4,20 +4,21 @@ test('lookUpConfigValue', () => {
     let configuration: ConfigNode = {
         matches: "all"
     };
-    let parameters = []
+    let parameters = {}
     expect(lookUpConfigValue(configuration, parameters)).toBe(undefined);
 });
 
 test('lookUpConfigValue - available movies by region', () => {
 
-    // Configuration describing if a movie is available in
+    // Configuration describing when movies are available in
     // a certain area. The rules include multiple dimensions:
     // year, country, local language, and city.
 
-    const movieAvailabilityConfiguration: ConfigNode = {
+    const movieConfig: ConfigNode = {
+        value: false, // default is false unless conditions below met
         matches: [{
             key: "year",
-            value: "2040",
+            value: 2040,
             comparator: "lt" // movie available until rights expire in year 2040
         }],
         groups: [{
@@ -50,7 +51,12 @@ test('lookUpConfigValue - available movies by region', () => {
             }]
         }]
     };
-    let parameters = [];
-    // TODO - add assertions
-    expect(lookUpConfigValue(movieAvailabilityConfiguration, parameters)).toBe(false);
+    expect(lookUpConfigValue(movieConfig, { year: 2023, country: "usa" })).toBe(true);
+    expect(lookUpConfigValue(movieConfig, { year: 2043, country: "usa" })).toBe(false);
+    expect(lookUpConfigValue(movieConfig, { year: 2023, country: "uk" })).toBe(true);
+    expect(lookUpConfigValue(movieConfig, { year: 2023, country: "canada" })).toBe(true);
+    expect(lookUpConfigValue(movieConfig, { year: 2023, country: "canada", local_language: "english" })).toBe(true);
+    expect(lookUpConfigValue(movieConfig, { year: 2023, country: "canada", local_language: "french" })).toBe(false);
+    expect(lookUpConfigValue(movieConfig, { year: 2023, country: "canada", local_language: "french", city: "toronto" })).toBe(true);
+    expect(lookUpConfigValue(movieConfig, { year: 2023, country: "canada", local_language: "french", city: "quebec" })).toBe(false);
 });

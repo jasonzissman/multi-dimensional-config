@@ -10,7 +10,7 @@ type MatchingParameterRule = {
 }
 export type ConfigNode = {
     matches: MatchingParameterRule[] | "all";
-    value?: any;
+    resolvedValue?: any;
     groups?: ConfigNode[];
 }
 
@@ -34,7 +34,7 @@ const lookUpConfigValueRecursive = (config: ConfigNode, parameters: MatchingPara
     // TODO - if depth is beyond a configurable max, throw error
     if (atLeastOneParamMatches(config.matches, parameters)) {
         const matchedSubgroup = config.groups?.find(g => atLeastOneParamMatches(g.matches, parameters));
-        return matchedSubgroup ? lookUpConfigValueRecursive(matchedSubgroup, parameters, depth + 1) : config.value;
+        return matchedSubgroup ? lookUpConfigValueRecursive(matchedSubgroup, parameters, depth + 1) : config.resolvedValue;
     }
 }
 

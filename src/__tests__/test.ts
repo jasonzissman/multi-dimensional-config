@@ -15,7 +15,6 @@ test('lookUpConfigValue - available movies by region', () => {
     // year, country, local language, and city.
 
     const movieConfig: ConfigNode = {
-        value: false, // default is false unless conditions below met
         matches: [{
             key: "year",
             value: 2040,
@@ -32,17 +31,17 @@ test('lookUpConfigValue - available movies by region', () => {
                 key: "country",
                 value: "uk"
             }],
-            value: true, // movie available to these countries
+            resolvedValue: true, // movie available to these countries
             groups: [{
                 // except where local rules require non-English language
-                value: false,
+                resolvedValue: false,
                 matches: [{
                     key: "local_language",
                     value: "french"
                 }],
                 groups: [{
                     // unless a specific city made an exception
-                    value: true,
+                    resolvedValue: true,
                     matches: [{
                         key: "city",
                         value: "toronto"
@@ -52,7 +51,7 @@ test('lookUpConfigValue - available movies by region', () => {
         }]
     };
     expect(lookUpConfigValue(movieConfig, { year: 2023, country: "usa" })).toBe(true);
-    expect(lookUpConfigValue(movieConfig, { year: 2043, country: "usa" })).toBe(false);
+    expect(lookUpConfigValue(movieConfig, { year: 2043, country: "usa" })).toBe(undefined);
     expect(lookUpConfigValue(movieConfig, { year: 2023, country: "uk" })).toBe(true);
     expect(lookUpConfigValue(movieConfig, { year: 2023, country: "canada" })).toBe(true);
     expect(lookUpConfigValue(movieConfig, { year: 2023, country: "canada", local_language: "english" })).toBe(true);

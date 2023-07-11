@@ -1,4 +1,4 @@
-type Comparator = "eq" | "lt" | "gt";
+type Comparator = "eq" | "lt" | "lte" | "gt" | "gte";
 type ParamType = number|boolean|string;
 type MatchingParameter = {
     [key: string]: ParamType;
@@ -11,7 +11,7 @@ type MatchingParameterRule = {
 export type ConfigNode = {
     matches: MatchingParameterRule[] | "all";
     resolvedValue?: any;
-    groups?: ConfigNode[];
+    subGroups?: ConfigNode[];
 }
 
 const satisfiesCondition = (p1: MatchingParameterRule, paramValue: ParamType, comp: Comparator) => {
@@ -19,8 +19,12 @@ const satisfiesCondition = (p1: MatchingParameterRule, paramValue: ParamType, co
         return p1.value === paramValue;
     } else if (comp === "lt") {
         return paramValue < p1.value;
+    } else if (comp === "lte") {
+        return paramValue <= p1.value;
     } else if (comp === "gt") {
         return paramValue > p1.value;
+    } else if (comp === "gte") {
+        return paramValue >= p1.value;
     } else {
         return false;
     }
@@ -33,7 +37,7 @@ const atLeastOneParamMatches = (matches: MatchingParameterRule[] | "all", parame
 const lookUpConfigValueRecursive = (config: ConfigNode, parameters: MatchingParameter, depth: number): any => {
     // TODO - if depth is beyond a configurable max, throw error
     if (atLeastOneParamMatches(config.matches, parameters)) {
-        const matchedSubgroup = config.groups?.find(g => atLeastOneParamMatches(g.matches, parameters));
+        const matchedSubgroup = config.subGroups?.find(g => atLeastOneParamMatches(g.matches, parameters));
         return matchedSubgroup ? lookUpConfigValueRecursive(matchedSubgroup, parameters, depth + 1) : config.resolvedValue;
     }
 }

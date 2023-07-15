@@ -21,7 +21,6 @@
   "scripts": {
     "test": "jest --config jestconfig.json",
     "build": "npx tsc",
-    "lint": "eslint . --ext .ts",
     "prettier": "prettier --config .prettierrc src/**/*.ts --write"
   },
   "keywords": [],

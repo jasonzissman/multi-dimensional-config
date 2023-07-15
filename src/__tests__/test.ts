@@ -64,18 +64,10 @@ test('lookUpConfigValue - available movies by region', () => {
       }
     ]
   };
-  expect(lookUpConfigValue(movieConfig, { year: 2023, country: 'usa' })).toBe(
-    true
-  );
-  expect(lookUpConfigValue(movieConfig, { year: 2043, country: 'usa' })).toBe(
-    false
-  );
-  expect(lookUpConfigValue(movieConfig, { year: 2023, country: 'uk' })).toBe(
-    true
-  );
-  expect(
-    lookUpConfigValue(movieConfig, { year: 2023, country: 'canada' })
-  ).toBe(true);
+  expect(lookUpConfigValue(movieConfig, { year: 2023, country: 'usa' })).toBe(true);
+  expect(lookUpConfigValue(movieConfig, { year: 2043, country: 'usa' })).toBe(false);
+  expect(lookUpConfigValue(movieConfig, { year: 2023, country: 'uk' })).toBe(true);
+  expect(lookUpConfigValue(movieConfig, { year: 2023, country: 'canada' })).toBe(true);
   expect(
     lookUpConfigValue(movieConfig, {
       year: 2023,

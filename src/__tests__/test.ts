@@ -64,38 +64,47 @@ test('lookUpConfigValue - available movies by region', () => {
       }
     ]
   };
-  expect(lookUpConfigValue(movieConfig, { year: 2023, country: 'usa' })).toBe(true);
-  expect(lookUpConfigValue(movieConfig, { year: 2043, country: 'usa' })).toBe(false);
-  expect(lookUpConfigValue(movieConfig, { year: 2023, country: 'uk' })).toBe(true);
-  expect(lookUpConfigValue(movieConfig, { year: 2023, country: 'canada' })).toBe(true);
-  expect(
-    lookUpConfigValue(movieConfig, {
-      year: 2023,
-      country: 'canada',
-      local_language: 'english'
-    })
-  ).toBe(true);
-  expect(
-    lookUpConfigValue(movieConfig, {
-      year: 2023,
-      country: 'canada',
-      local_language: 'french'
-    })
-  ).toBe(false);
-  expect(
-    lookUpConfigValue(movieConfig, {
-      year: 2023,
-      country: 'canada',
-      local_language: 'french',
-      city: 'toronto'
-    })
-  ).toBe(true);
-  expect(
-    lookUpConfigValue(movieConfig, {
-      year: 2023,
-      country: 'canada',
-      local_language: 'french',
-      city: 'quebec'
-    })
-  ).toBe(false);
+  let testParams;
+
+  testParams = { year: 2023, country: 'usa' };
+  expect(lookUpConfigValue(movieConfig, testParams)).toBe(true);
+
+  testParams = { year: 2043, country: 'usa' };
+  expect(lookUpConfigValue(movieConfig, testParams)).toBe(false);
+
+  testParams = { year: 2023, country: 'uk' };
+  expect(lookUpConfigValue(movieConfig, testParams)).toBe(true);
+
+  testParams = { year: 2023, country: 'canada' };
+  expect(lookUpConfigValue(movieConfig, testParams)).toBe(true);
+
+  testParams = {
+    year: 2023,
+    country: 'canada',
+    local_language: 'english'
+  };
+  expect(lookUpConfigValue(movieConfig, testParams)).toBe(true);
+
+  testParams = {
+    year: 2023,
+    country: 'canada',
+    local_language: 'french'
+  };
+  expect(lookUpConfigValue(movieConfig, testParams)).toBe(false);
+
+  testParams = {
+    year: 2023,
+    country: 'canada',
+    local_language: 'french',
+    city: 'toronto'
+  };
+  expect(lookUpConfigValue(movieConfig, testParams)).toBe(true);
+
+  testParams = {
+    year: 2023,
+    country: 'canada',
+    local_language: 'french',
+    city: 'quebec'
+  };
+  expect(lookUpConfigValue(movieConfig, testParams)).toBe(false);
 });
